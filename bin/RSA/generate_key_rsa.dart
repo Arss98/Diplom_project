@@ -16,10 +16,10 @@ class RSAKeyPair {
     final phi = (p - 1) * (q - 1); //Вычисляем функцию Эйлера
 
     // Выбираем открытый ключ e (e < phi(n))
-    e = _randomCoPrime(phi);
+    e = _generateRandomCoPrime(phi);
 
     // Вычисляем закрытый ключ d (d * e = 1 (mod phi(n)))
-    d = _modularMultiplicativeInverse(e, phi);
+    d = e.modInverse((p - 1) * (q - 1));
 
     return {
       'publicKey': _encodePublicKey(e, n),
@@ -28,30 +28,23 @@ class RSAKeyPair {
   }
 
   //Функция для генерации рандомного простого числа
-  int _generatePrimeNumber(int bitLength) {
-    while (true) {
-      final n = 1 << (bitLength - 1) + random.nextInt(1 << (bitLength - 2));
-      if (!FermatTest.isProbablePrime(n)) {
-        return n;
-      }
+  int _generatePrimeNumber(int n) {
+    final Random random = Random.secure();
+    int p = (1 << n) + random.nextInt(1 << (n - 1));
+    while (!FermatTest.fermatTest(p, 10)) {
+      p = (1 << n) + random.nextInt(1 << (n - 1));
     }
+    return p;
   }
 
   // Функция для генерации случайного взаимно простого числа
-  int _randomCoPrime(int phi) {
-    final random = Random.secure();
+
+  int _generateRandomCoPrime(int phi) {
+    final Random random = Random.secure();
     int r;
     do {
-      // Генерируем случайное число размером phi.bitLength бит.
-      // Это число должно быть меньше phi(n) и нечётным.
-      r = int.parse(
-          '0x${List.generate(phi.bitLength, (_) => random.nextInt(16)).join()}');
-      r = r % phi;
-
-      // Если r равно 0 или имеет общий делитель с phi(n), генерируем его заново.
-    } while (r == 0 || _gcd(r, phi) != 0);
-
-    // Возвращаем случайное взаимно простое число.
+      r = random.nextInt(phi - 1) + 1;
+    } while (_gcd(r, phi) != 1);
     return r;
   }
 
@@ -69,32 +62,6 @@ class RSAKeyPair {
 
     // Возвращаем наибольший общий делитель a.
     return localA;
-  }
-
-  int _modularMultiplicativeInverse(int a, int m) {
-    int localM = m;
-    int localA = a;
-    int m0 = localM;
-    int t = 0;
-    int q = 0;
-    int x0 = 0;
-    int x1 = 1;
-
-    if (localM == 1) {
-      return 0;
-    }
-
-    while (localA > 1) {
-      q = localA ~/ localM;
-      t = localM;
-      localM = localA % localM;
-      localA = t;
-      t = x0;
-      x0 = x1 - q * x0;
-      x1 = t;
-    }
-
-    return x1.isNegative ? x1 + m0 : x1;
   }
 
   // Кодирование открытого ключа (e, n)
