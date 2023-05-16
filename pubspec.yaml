@@ -4,10 +4,13 @@ version: 1.0.0
 # repository: https://github.com/my_org/my_repo
 
 environment:
-  sdk: ">=2.19.6 <3.0.0"
+  sdk: ">=2.19.0 <3.0.0"
 
 dev_dependencies:
   flutter_lints: ^2.0.0
 
 dependencies:
   pointycastle: ^3.7.3
+  hex: ^0.1.2
+  crypto: ^3.0.1
+
