@@ -16,8 +16,8 @@ class _CryptScreenState extends State<CryptScreen> {
   var userMessage = "";
 
   // For crypt
-  var encrypted = [] as List<int>;
-  var rsaKey = [] as List<int>;
+  var encrypted = <int>[];
+  var rsaKey = <int>[];
 
   // For screen
   var encryptedMessage = "";
