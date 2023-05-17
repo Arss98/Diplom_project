@@ -28,68 +28,127 @@ class _CryptScreenState extends State<CryptScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              const SizedBox(height: 32),
-              const Text(
-                "Введите сообщение",
-                style: Consts.textStyle,
-              ),
-              TextField(
-                style: Consts.textStyle,
-                onSubmitted: onSubmittedTF,
-              ),
-              const SizedBox(height: 32),
-              const Text(
-                'Введенное сообщение: ',
-                style: Consts.textStyle,
-              ),
-              const SizedBox(height: 4),
-              Container(
-                  decoration: Consts.boxStyle,
-                  padding: const EdgeInsets.all(4),
-                  width: MediaQuery.of(context).size.width,
-                  child: Text(userMessage)),
-              const Spacer(),
-              const Text(
-                'Зашифрованное сообщение: ',
-                style: Consts.textStyle,
-              ),
-              const SizedBox(height: 4),
-              Container(
-                  decoration: Consts.boxStyle,
-                  padding: const EdgeInsets.all(4),
-                  width: MediaQuery.of(context).size.width,
-                  child: Text(encryptedMessage)),
-              const SizedBox(height: 8),
-              _onEncodeButton(),
-              const SizedBox(height: 16),
-              const Text(
-                'Расшифрованное сообщение: ',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
-              ),
-              Container(
-                  decoration: Consts.boxStyle,
-                  padding: const EdgeInsets.all(4),
-                  width: MediaQuery.of(context).size.width,
-                  child: Text(decryptedMessage)),
-              const SizedBox(height: 8),
-              _onDecodeButton(),
-              const Spacer(),
-            ],
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                _updateButton(),
+                _userMessageBlock(),
+                const SizedBox(height: 48),
+                const Text(
+                  'Результаты',
+                  style: Consts.bigTextStyle,
+                ),
+                SizedBox(height: 16),
+                encodeBlock(),
+                const SizedBox(height: 16),
+                decodeBlock(),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  void onSubmittedTF(String value) {
+  void _onSubmittedTF(String value) {
     setState(() {
       userMessage = value;
     });
+  }
+
+  void _onUpdateScreen() {
+    setState(() {
+      userMessage = "";
+      encrypted = <int>[];
+      rsaKey = <int>[];
+      encryptedMessage = "";
+      decryptedMessage = "";
+    });
+  }
+
+  Widget _updateButton() {
+    return Container(
+      padding: EdgeInsets.zero,
+      alignment: Alignment.centerRight,
+      child: IconButton(
+        color: Colors.orangeAccent,
+        onPressed: _onUpdateScreen,
+        icon: const Icon(Icons.update),
+      ),
+    );
+  }
+
+  Widget _userMessageBlock() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        const SizedBox(height: 32),
+        const Text(
+          "Введите сообщение",
+          style: Consts.bigTextStyle,
+        ),
+        const SizedBox(height: 8),
+        TextField(
+          decoration: Consts.tfStyle,
+          style: Consts.textStyle,
+          onSubmitted: _onSubmittedTF,
+        ),
+        const SizedBox(height: 16),
+        const Text(
+          'Введенное сообщение: ',
+          style: Consts.textStyle,
+        ),
+        const SizedBox(height: 4),
+        Container(
+            decoration: Consts.boxStyle,
+            padding: const EdgeInsets.all(4),
+            width: MediaQuery.of(context).size.width,
+            child: Text(userMessage)),
+      ],
+    );
+  }
+
+  Widget encodeBlock() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        const Text(
+          'Зашифрованное сообщение: ',
+          style: Consts.textStyle,
+        ),
+        const SizedBox(height: 8),
+        Container(
+            decoration: Consts.boxStyle,
+            padding: const EdgeInsets.all(4),
+            width: MediaQuery.of(context).size.width,
+            child: Text(encryptedMessage)),
+        const SizedBox(height: 10),
+        _onEncodeButton(),
+      ],
+    );
+  }
+
+  Widget decodeBlock() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        const Text(
+          'Расшифрованное сообщение: ',
+          style: Consts.textStyle,
+        ),
+        const SizedBox(height: 8),
+        Container(
+            decoration: Consts.boxStyle,
+            padding: const EdgeInsets.all(4),
+            width: MediaQuery.of(context).size.width,
+            child: Text(decryptedMessage)),
+        const SizedBox(height: 10),
+        _onDecodeButton(),
+      ],
+    );
   }
 
   Widget _onEncodeButton() {
@@ -112,7 +171,10 @@ class _CryptScreenState extends State<CryptScreen> {
                       .replaceAll(' ', '');
                 });
               },
-        child: const Text("Зашифровать сообщение"),
+        child: const Text(
+          "Зашифровать сообщение",
+          style: TextStyle(color: Colors.white),
+        ),
       ),
     );
   }
@@ -131,7 +193,8 @@ class _CryptScreenState extends State<CryptScreen> {
                   decryptedMessage = result;
                 });
               },
-        child: const Text("Расшифровать сообщение"),
+        child: const Text("Расшифровать сообщение",
+            style: TextStyle(color: Colors.white)),
       ),
     );
   }
