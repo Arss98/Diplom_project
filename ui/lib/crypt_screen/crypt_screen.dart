@@ -64,6 +64,7 @@ class _CryptScreenState extends State<CryptScreen> {
                   padding: const EdgeInsets.all(4),
                   width: MediaQuery.of(context).size.width,
                   child: Text(encryptedMessage)),
+              const SizedBox(height: 8),
               _onEncodeButton(),
               const SizedBox(height: 16),
               const Text(
@@ -75,6 +76,7 @@ class _CryptScreenState extends State<CryptScreen> {
                   padding: const EdgeInsets.all(4),
                   width: MediaQuery.of(context).size.width,
                   child: Text(decryptedMessage)),
+              const SizedBox(height: 8),
               _onDecodeButton(),
               const Spacer(),
             ],
