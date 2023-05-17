@@ -30,7 +30,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
+  cryptography:
+    path: ./bin
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -38,6 +39,7 @@ dependencies:
   pointycastle: ^3.7.3
   hex: ^0.1.2
   crypto: ^3.0.1
+
 
 dev_dependencies:
   flutter_test:
